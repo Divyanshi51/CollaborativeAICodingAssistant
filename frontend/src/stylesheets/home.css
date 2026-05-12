@@ -1,0 +1,156 @@
+:root {
+    --bg-color: #0a192f;
+    --card-bg: #112240;
+    --text-primary: #e6f1ff;
+    --text-secondary: #8892b0;
+    --accent-color: #64ffda;
+    --input-bg: #1d2d50;
+    --modal-overlay: rgba(2, 12, 27, 0.85);
+    --font-mono: 'Fira Code', 'Courier New', monospace;
+}
+
+.home-main {
+    min-height: 100vh;
+    background-color: var(--bg-color);
+    padding: 2rem;
+    font-family: 'Inter', sans-serif;
+}
+
+.projects-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    max-width: 40vw;
+    margin: auto;
+}
+
+.project-card {
+    background-color: var(--card-bg);
+    border: 1px solid rgba(100, 255, 218, 0.2);
+    border-radius: 8px;
+    padding: 1.5rem;
+    transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+    min-width: 250px;
+    color: var(--text-primary);
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    margin: auto;
+}
+
+.project-card:hover {
+    border-color: #64ffda;
+    transform: translateY(-5px);
+    background-color: rgba(100, 255, 218, 0.05);
+    box-shadow: 0 10px 20px -10px rgba(100, 255, 218, 0.3);
+}
+
+.project-card h2 {
+    font-family: var(--font-mono);
+    font-size: 1.25rem;
+    color: var(--accent-color);
+    margin-bottom: 1rem;
+}
+
+.collaborators {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--text-secondary);
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+}
+
+.new-project-btn {
+    background-color: transparent;
+    border: 1px dashed var(--accent-color);
+    color: var(--accent-color);
+    font-family: var(--font-mono);
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    min-width: 250px;
+    border-radius: 8px;
+    padding: 1.5rem;
+    transition: 0.3s;
+}
+
+
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background-color: var(--modal-overlay);
+    backdrop-filter: blur(8px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.modal-container {
+    background-color: var(--card-bg);
+    padding: 2.5rem;
+    border-radius: 12px;
+    border: 1px solid var(--accent-color);
+    width: 100%;
+    max-width: 450px;
+    box-shadow: 0 20px 40px -15px rgba(2, 12, 27, 0.7);
+}
+
+.modal-container h2 {
+    font-family: var(--font-mono);
+    color: var(--accent-color);
+    margin-top: 0;
+}
+
+.modal-container label {
+    display: block;
+    font-family: var(--font-mono);
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+    margin-bottom: 0.5rem;
+}
+
+.modal-container input {
+    width: 100%;
+    padding: 0.8rem;
+    background-color: var(--input-bg);
+    border: 1px solid transparent;
+    border-radius: 4px;
+    color: var(--text-primary);
+    font-family: var(--font-mono);
+    margin-bottom: 1.5rem;
+}
+
+.modal-container input:focus {
+    outline: none;
+    border-color: #64ffda;
+    box-shadow: 0 0 5px rgba(100, 255, 218, 0.5);
+}
+
+.modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+}
+
+.btn-secondary {
+    background: transparent;
+    color: var(--text-secondary);
+    border: none;
+    cursor: pointer;
+    font-family: var(--font-mono);
+}
+
+.btn-primary {
+    background: transparent;
+    border: 1px solid var(--accent-color);
+    color: var(--accent-color);
+    padding: 0.6rem 1.5rem;
+    border-radius: 4px;
+    font-family: var(--font-mono);
+    cursor: pointer;
+    transition: 0.3s;
+}
