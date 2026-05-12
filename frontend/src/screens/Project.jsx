@@ -42,6 +42,7 @@ const Project = () => {
   const [webContainer, setWebContainer] = useState(null);
   const [iframeUrl, setIframeUrl] = useState(null);
   const [runProcess, setRunProcess] = useState(null);
+  const [containerReady, setContainerReady] = useState(false);
   const handleUserClick = (id) => {
     setSelectedUserId((prevSelectedUserId) => {
       const newSelectedUserId = new Set(prevSelectedUserId);
@@ -98,14 +99,31 @@ const Project = () => {
     );
   }
 
+  const ensureWebContainer = async () => {
+    if (webContainer) {
+      return webContainer;
+    }
+
+    try {
+      const container = await getWebContainer();
+      if (container) {
+        setWebContainer(container);
+        setContainerReady(true);
+      }
+      return container;
+    } catch (error) {
+      console.error("WebContainer boot error:", error);
+      return null;
+    }
+  };
+
   useEffect(() => {
     initializeSocket(project._id);
+
     if (!webContainer) {
-      getWebContainer().then((container) => {
-        setWebContainer(container);
-        // console.log("container started");
-      });
+      ensureWebContainer();
     }
+
     receiveMessage("project-message", (data) => {
       // console.log(data);
 
@@ -128,10 +146,9 @@ const Project = () => {
     axios
       .get(`/projects/get-project/${location.state.project._id}`)
       .then((res) => {
-    
         const pN = res.data.project.name;
         setProjectName(pN);
-         setProject(res.data.project);
+        setProject(res.data.project);
         setFileTree(res.data.project.fileTree || {});
       });
     axios
@@ -246,8 +263,16 @@ const Project = () => {
             {Object.keys(fileTree).length > 0 && (
               <button
                 onClick={async () => {
-                  await webContainer.mount(fileTree);
-                  const installProcess = await webContainer.spawn("npm", [
+                  const container = await ensureWebContainer();
+                  if (!container) {
+                    console.error(
+                      "Cannot start container: WebContainer is unavailable.",
+                    );
+                    return;
+                  }
+
+                  await container.mount(fileTree);
+                  const installProcess = await container.spawn("npm", [
                     "install",
                   ]);
 
@@ -261,9 +286,7 @@ const Project = () => {
                   if (runProcess) {
                     runProcess.kill();
                   }
-                  let tempRunProcess = await webContainer.spawn("npm", [
-                    "start",
-                  ]);
+                  let tempRunProcess = await container.spawn("npm", ["start"]);
                   tempRunProcess.output.pipeTo(
                     new WritableStream({
                       write(chunk) {
@@ -272,8 +295,7 @@ const Project = () => {
                     }),
                   );
                   setRunProcess(tempRunProcess);
-                  webContainer.on("server-ready", (port, url) => {
-                    // console.log(port, url);
+                  container.on("server-ready", (port, url) => {
                     setIframeUrl(url);
                   });
                 }}
